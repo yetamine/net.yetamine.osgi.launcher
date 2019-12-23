@@ -1,0 +1,192 @@
+Yetamine OSGi Framework Launcher ${project.version}
+
+Usage:
+
+COMMAND [...]
+
+Each COMMAND takes remaining arguments and applies them in its specific way.
+
+Positional arguments (i.e., the arguments coming after all options) may be
+separated with the special -- argument, which solves rare ambiguities when
+the first positional parameter starts with a dash. The special -- argument may
+be used always, even with a COMMAND that accepts no positional arguments or no
+OPTION that could be confused with a positional argument.
+
+BOOLEAN arguments must be either true or false (case-insensitive literals), or
+else the OPTION becomes true and the argument is retained as the next argument
+to parse. This allows switching Boolean options on simply by using their names.
+
+delete INSTANCE
+    Deletes the INSTANCE. This command performs the operation with the instance
+    lock being acquired to prevent the instance from concurrent access.
+
+deploy [OPTION...] INSTANCE
+    Creates or updates an instance of the framework according to the given
+    settings. The instance data are stored in the INSTANCE directory. If the
+    directory does not exist, it is created. Following options are supported:
+
+    --bundle-store, -B PATH
+        Adds all immediate child directories as bundle sources (see --bundles).
+
+    --bundles, -b PATH
+        Adds a source of bundles to deploy. The PATH must refer to a directory
+        or to a Java properties file:
+
+        * If the PATH refers to a file, the file is loaded to provide specific
+          deployment options for bundles found in the directory subtree of the
+          file's parent directory.
+
+        * If the PATH points to a directory, the directory becomes the source
+          of bundles to deploy. If the directory contains deployment.properties
+          file, the file is loaded to provide specific deployment options for
+          the bundles to be deployed.
+
+        A bundle symbolic name and version must be unique within the instance,
+        repeated occurrences are ignored, however, since the deployment order
+        for bundles does not depend on the list order, any of aliased bundles
+        might be picked and deployed.
+
+    --clean-configuration BOOLEAN
+        If switched on, the configuration of the INSTANCE is deleted, so that
+        the --create-configuration options may become effective.
+
+    --clean-instance BOOLEAN
+        If switched on, the INSTANCE is deleted and deployed from scratch.
+
+    --create-configuration, -c DIR
+        Adds DIR to the list of directories to supply INSTANCE/conf contents.
+        The directories added with this option are processed if INSTANCE/conf
+        does not exist.
+
+    --dump-status BOOLEAN
+        Displays the detailed status information.
+
+    --framework-properties, -f FILE
+        Loads framework properties from FILE. All combined framework properties
+        are passed to the framework factory at the end. Note that some of them
+        may be overridden by the launcher itself and it is not possible to set
+        them otherwise.
+
+    --framework-property, -F NAME VALUE
+        Sets framework property NAME to VALUE.
+
+    --launching-properties, -l FILE
+        Loads launching properties from FILE. The launching properties specify
+        defaults for bundle deployment and additional options for the launcher.
+
+    --launching-property, -L NAME VALUE
+        Sets launching property NAME to VALUE.
+
+    --system-properties, -s FILE
+        Loads system properties from FILE. All combined system properties are
+        applied immediately after processing the arguments, so that any other
+        code works within the updated environment.
+
+    --system-property, -S NAME VALUE
+        Sets system property NAME to VALUE.
+
+    --uninstall-bundles, -U LOCATION
+        Uninstalls all bundles with location starting with LOCATION.
+
+    --update-configuration, -u DIR
+        Adds DIR to the list of directories to supply INSTANCE/conf contents
+        always, unlike the --create-configuration option.
+
+help
+    Displays this help.
+
+launch [OPTION...] INSTANCE [ARG...]
+    Combines the deploy and start commands and by default executes them in one
+    after the other, employing any options that both these commands can accept.
+
+    It is possible to use following specific additional options:
+
+    --skip-deploy BOOLEAN
+        Skips the deploy phase.
+
+    --skip-start BOOLEAN
+        Skips the start phase.
+
+    If both --skip-deploy and --skip-start options are activated, the command
+    initializes the framework and then terminates it, basically verifying the
+    deployment consistency. Note that there is a difference between the start
+    command and launch --skip-deploy, because the latter command does not read
+    the properties from the instance data and it can create a missing instance
+    if necessary.
+
+start [OPTION...] INSTANCE
+    Starts the INSTANCE which must exist already. The launcher uses all data of
+    the instance and allows overriding various properties for the single launch
+    without storing the overrides into the instance data. This command prevents
+    the instance from using org.osgi.framework.storage.clean framework property
+    as well.
+
+    This command accepts following options:
+
+    --command-address, -a HOST PORT
+        Specifies the HOST and PORT for the instance to await remote commands.
+        The command link does not open by default, the link parameters must be
+        provided explicitly. Setting the HOST to an empty string disables the
+        link explicitly. The PORT may be set to 0 to pick an available random
+        port.
+
+    --command-secret, -t SECRET
+        Sets the SECRET to secure remote commands. If this option is missing
+        or when the SECRET is an empty string, a random secret is generated.
+        The SECRET must consist of characters in range of 0x20-0x80 only.
+
+    --dump-status BOOLEAN
+        Displays the detailed status information.
+
+    All parameters of the command link are stored in INSTANCE/instance.link in
+    the order HOST, PORT and SECRET, each on a separate line.
+
+    Besides the options described above, following options described at the
+    deploy command may be used as well to override a property transiently:
+
+    --framework-properties
+    --framework-property
+    --launching-properties
+    --launching-property
+    --system-properties
+    --system-property
+
+    The overrides are applied after loading the properties from the instance
+    persistent data.
+
+stop INSTANCE | HOST PORT SECRET
+    Attempts to stop the given instance. The instance may be specified by its
+    directory (see INSTANCE argument) or by its command link parameters. When
+    the instance provides no command link or when it could not be reached, it
+    will not be stopped.
+
+The launcher uses a few Java system properties (see the Java `-D` option):
+
+    net.yetamine.osgi.launcher.logging.file
+        Specifies the file to store the launcher log. The property must be a
+        writable file name, or 'stderr' or 'stdout'. When a file of the same
+        name should be used, specify './stdout' for instance. By default the
+        'stderr' value applies.
+
+    net.yetamine.osgi.launcher.logging.level
+        Specifies the threshold for log messages. Supported are following
+        values in the increasing level of detail: 'FORCE', 'ERROR', 'WARN',
+        'INFO' and 'DEBUG'. The default value is 'ERROR'. The 'FORCE' level
+        applies for explicitly requested output, like --dump-status, but it
+        mutes effectively all regular logging (even errors).
+
+When the launcher shall be used on a Java class path with additional libraries,
+the main class 'net.yetamine.osgi.launcher.Main' must be specified to start the
+launcher. All commands requiring a framework implementation actually require
+using the class path that contains the launcher and the framework to employ.
+
+The process terminates normally with following exit codes:
+
+0   SUCCESS     No fatal problem encountered
+1   RUNTIME     A fatal runtime problem appeared
+2   SYNTAX      Bad arguments passed
+3   CONFIG      Loaded configuration contained severe errors
+4   FAILURE     A non-essential, but required startup operation failed
+
+Other exit codes may be returned directly by JVM when it terminates abruptly.
+

@@ -1,1 +1,4 @@
-*.sh            eol=lf
+*.sh                                    eol=lf
+
+# Project specific settings
+/src/main/assembly/distribution/yofl    eol=lf
