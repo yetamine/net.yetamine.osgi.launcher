@@ -5,8 +5,8 @@ Yetamine OSGi Launcher, or YOFL for short, is a vendor-agnostic launcher for the
 
 ## Introduction
 
-YOFL is a tool for expert users and therefore assumes some knowledge of Java applications and the OSGi Framework in particular.
-This tool launches the framework if provided with an implementation on the class path according to the supplied command line.
+YOFL is a tool for expert users and therefore assumes appropriate knowledge of Java applications and the OSGi Framework in particular.
+This tool launches the framework, if provided with an implementation on the class path, according to the supplied command line.
 
 Assuming that Java runtime environment 1.8 or newer is available, YOFL can show the command line reference with following command:
 
@@ -31,7 +31,7 @@ java -cp yofl.jar:some/path/osgi-framework-implementation.jar launch
 
 This becomes quickly uncomfortable, especially when additional tuning options are applied.
 The supplied launch scripts provide a bit more comfortable alternative.
-However, because the scripts are still a very thin layer around the launcher, they are more useful for making application distributions on the top of them.
+However, because the scripts are still a very thin layer around the launcher, they are rather more useful for making application distributions on the top of them.
 
 The scripts use an interface based on environment variables and pass all command line arguments directly to the launcher.
 This approach seems to be more robust and portable than attempts to process command line arguments partially.
@@ -40,6 +40,20 @@ The details of all used environment variables are available in the script header
 Check [ServiceBox](http://github.com/yetamine/servicebox), a ready-to-use distribution based on YOFL.
 ServiceBox shows how YOFL can be used for making a small OSGi framework distribution.
 Moreover ServiceBox might be actual thing to be used rather than YOFL itself.
+
+
+## Configuration
+
+The help mentions:
+
+* framework properties,
+* launching properties,
+* system properties,
+* deployment properties (specifically, `deployment.properties` file).
+
+What are all these properties for?
+Check the the sample files with detailed explanation.
+The sample files are a good starting point for custom configuration as well.
 
 
 ## Licensing

@@ -38,8 +38,8 @@ YOFL can be used conveniently as the launcher.
 It supports sharing distribution parts scattered among various places on the filesystem.
 Building an application/framework distribution with specific layout should be then easy.
 
-**Bundle discovery:** YOFL can discover and configure multiple bundles from a filesystem easily.
-Just tell where the bundles are located and optionally supply specific options, like the start level.
+**Bundle discovery:** YOFL can discover and configure multiple bundles from a filesystem.
+Just tell where the bundles are located and optionally supply specific options, like the start levels of particular bundles that deviate from the default settings.
 YOFL deploys and configures them accordingly.
 
 **Bundle synchronization:** It is possible to configure one or more bundle sources, so that YOFL keeps the deployed bundle set on launch consistent with particular bundle sources.
