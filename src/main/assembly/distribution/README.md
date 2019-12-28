@@ -1,6 +1,6 @@
 # Yetamine OSGi Framework Launcher
 
-Yetamine OSGi Launcher, or YOFL for short, is a vendor-agnostic launcher for the OSGi Framework and OSGi-based applications.
+Yetamine OSGi Launcher, or YOFL for short, is a vendor-neutral launcher for the OSGi Framework and OSGi-based applications.
 
 
 ## Introduction
@@ -52,7 +52,7 @@ The help mentions:
 * deployment properties (specifically, `deployment.properties` file).
 
 What are all these properties for?
-Check the the sample files with detailed explanation.
+Check the the sample properties files with detailed explanation.
 The sample files are a good starting point for custom configuration as well.
 
 
