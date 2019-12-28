@@ -27,26 +27,33 @@ However, the vendor-specific launchers differ, which brings a couple of points t
 
 Let's have a look which YOFL's features might be interesting.
 
-**Vendor-agnostic:** YOFL favours no particular OSGi Framework implementation.
+**Vendor-agnostic:**
+YOFL favours no particular OSGi Framework implementation.
 It uses the specification-defined portable way to make a framework instance and uses no dirty hacks or proprietary extensions.
 
-**Light and simple:** Large framework distributions provide many impressive features and services, but such a plethora of options might become a burden for small applications.
+**Light and simple:**
+Large framework distributions provide many impressive features and services, but such a plethora of options might become a burden for small applications.
 Instead of trying to shrink a large framework distribution for hosting such an application, it might be easier to build a small distribution from ground up.
 YOFL can be used conveniently as the launcher.
 
-**Flexible layout:** YOFL takes a number of arguments to learn what to do and what to use.
+**Flexible layout:**
+YOFL takes a number of arguments to learn what to do and what to use.
 It supports sharing distribution parts scattered among various places on the filesystem.
 Building an application/framework distribution with specific layout should be then easy.
 
-**Bundle discovery:** YOFL can discover and configure multiple bundles from a filesystem.
+**Bundle discovery:**
+YOFL can discover and configure multiple bundles from a filesystem.
 Just tell where the bundles are located and optionally supply specific options, like the start levels of particular bundles that deviate from the default settings.
 YOFL deploys and configures them accordingly.
 
-**Bundle synchronization:** It is possible to configure one or more bundle sources, so that YOFL keeps the deployed bundle set on launch consistent with particular bundle sources.
+**Bundle synchronization:**
+It is possible to configure one or more bundle sources, so that YOFL keeps the deployed bundle set on launch consistent with particular bundle sources.
 
-**Basic process control:** Like any ordinary launcher, YOFL supports graceful framework shutdown and optional remote shutdown on receiving a cryptographically protected packet.
+**Basic process control:**
+Like any ordinary launcher, YOFL supports graceful framework shutdown and optional remote shutdown on receiving a cryptographically protected packet.
 
-**Smaller and faster Docker images:** There are two points contributing to this goal.
+**Smaller and faster Docker images:**
+There are two points contributing to this goal.
 
 * Firstly, as mentioned above, an application distribution can be build from ground up, so that it contains no features that the application does not need or use.
 * Secondly, installing a bundle in a framework instance means usually that the framework copies the bundle binary to its storage area.
