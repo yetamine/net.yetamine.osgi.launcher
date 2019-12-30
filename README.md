@@ -5,25 +5,26 @@ Yetamine OSGi Launcher, or YOFL for short, is a vendor-neutral launcher for the 
 
 ## Introduction
 
-Launching a framework instance is an easy task actually and it can be done in a few steps:
+Launching a framework instance is not a difficult task, thanks to the specification-defined support for framework launching and embedding, but it still requires a non-trivial effort, especially when taking into account that launching the framework instance must include deploying at least the initial set of bundles.
 
-1. Find the `FrameworkFactory` using the `ServiceLoader` as defined in the OSGi specification.
-2. Make the `Framework` instance using the `FrameworkFactory::newFramework` method.
-3. Invoke `Framework::init` to initialize the framework instance.
-4. Invoke `Framework::start` to actually launch the framework instance.
+A launcher therefore must:
 
-However, the launched framework instance contains just the system bundle, which does nothing alone.
-The framework launcher must therefore take care of populating the framework instance with the application bundles, or it must take care at least of deploying the initial bundle set that could take the bootstrapping over and populate the framework with remaining bundles.
+* Prepare the framework deployment area and configure the environment if necessary.
+* Deploy application bundles, or at least an initial bundle set that takes the bootstrapping process over and deploys the application bundles later.
+* Start the framework instance.
+* Take care of a graceful shutdown of the framework instance (at least the usual system signals should be handled, some launchers provide even the possibility of remote triggers).
 
-Populating the framework instance with bundles is a tedious task.
-Framework vendors therefore often supply a launcher together with their framework implementations, so that the user could just let the launcher install the bundles.
+YOFL performs all these tasks according to the instructions given by the command line arguments and configuration files, which are specified in the arguments.
+
+
+## Why to use YOFL?
+
+As noted above, a framework launcher must take care of quite a lot of tasks.
+Framework vendors therefore often supply own launchers together with their framework implementations, so that the framework user does not have to deal with all those tasks.
 However, the vendor-specific launchers differ, which brings a couple of points to consider:
 
 * Vendor-specific launchers are usually specific for a particular framework implementation and therefore details like the bootstrap configuration can make changing the framework implementation more difficult.
 * Some launchers may be more suitable for specific use cases than others and having more options could help to choose a better suited launcher for a particular use case.
-
-
-## Overview
 
 Let's have a look which YOFL's features might be interesting.
 
@@ -34,15 +35,14 @@ It uses the specification-defined portable way to make a framework instance and 
 **Light and simple:**
 Large framework distributions provide many impressive features and services, but such a plethora of options might become a burden for small applications.
 Instead of trying to shrink a large framework distribution for hosting such an application, it might be easier to build a small distribution from ground up.
-YOFL can be used conveniently as the launcher.
 
 **Flexible layout:**
 YOFL takes a number of arguments to learn what to do and what to use.
-It supports sharing distribution parts scattered among various places on the filesystem.
-Building an application/framework distribution with specific layout should be then easy.
+Having bundles scattered among various places on the filesystem is no problem.
+Building an application/framework distribution with a specific layout should be then no problem either.
 
 **Bundle discovery:**
-YOFL can discover and configure multiple bundles from a filesystem.
+YOFL can discover and configure multiple bundles from a filesystem in a bulk way.
 Just tell where the bundles are located and optionally supply specific options, like the start levels of particular bundles that deviate from the default settings.
 YOFL deploys and configures them accordingly.
 
@@ -60,52 +60,25 @@ There are two points contributing to this goal.
 This allows using the bundle, until it is uninstalled, even if the original bundle location is not available anymore.
 A naïvely built Docker image repeats the installation steps for every new container, duplicating the bundles in the container file system and prolonging the startup time.
 
-Unlike most other launchers, YOFL distinguishes the *deploy* phase and the *start* phase and allows executing them separately.
+Unlike most other launchers, YOFL distinguishes the *deploy* phase and the *start* phase and it allows executing them separately.
 This feature can be used conveniently with the Docker builder pattern:
 
 1. Take a base Docker image with YOFL and use it as the builder.
 2. Add the application distribution.
-3. Run YOFL `deploy` command to deploy the application.
+3. Let YOFL deploy the application.
 4. Create the final Docker image from the base image and the deployed application.
 
-Then the final image contains just the pre-deployed application ready to run.
+Then the final image contains just the pre-deployed application ready to run with YOFL as the entry point that starts it (but skips the deploy phase completely).
 
 
 ## Getting started
 
-Just run following command to get the command reference:
+Download the release and check the attached documentation to get more information.
+A brief help can be displayed with the following command:
 
 ```bash
 java -jar yofl.jar help
 ```
-
-The `help` command gives some idea what YOFL can do and how it could be used.
-Unlike `help`, most YOFL commands require an OSGi framework implementation to operate with.
-However, the launcher contains no OSGi framework implementation.
-Instead, it assumes that the OSGi framework implementation (compatible with OSGi R5 or newer) to be launched is provided on the class path.
-This allows using the launcher with any sound OSGi framework implementation with relative ease: the implementation must be supplied on the class path.
-
-The scripts use an interface based on environment variables and pass all command line arguments directly to the launcher.
-This approach seems to be more robust and portable than attempts to process command line arguments partially.
-The details of all used environment variables are available in the script headers.
-Here is provided just a brief listing:
-
-* `JAVA`: The command to launch JVM, by default `java`.
-* `JAVA_OPTS`: User-defined options passed to the `JAVA` command.
-* `YOFL_AUTOPATH`: All `*.jar` files in this directory are appended to the class path.
-* `YOFL_BOOTPATH`: The user-defined part of the class path.
-* `YOFL_LOGGING_FILE`: The file name for the log, which the launcher prints to standard error output by default.
-* `YOFL_LOGGING_LEVEL`: The threshold for log messages with the possible values `FORCE`, `ERROR` (the default), `WARN`, `INFO` and `DEBUG`.
-
-
-With the help of the launch script the command to run an application can look like this:
-
-```bash
-YOFL_BOOTPATH="${that_framework_jar}" yofl launch --bundles "${here_are_the_bundles}" "${instance_home}"
-```
-
-Although this form might already be usable for use in scripts, it is still quite mouthful.
-Check rather [ServiceBox](http://github.com/yetamine/servicebox), a ready-to-use distribution based on YOFL.
 
 
 ## Licensing ##

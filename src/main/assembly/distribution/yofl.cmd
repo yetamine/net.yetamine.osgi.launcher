@@ -23,10 +23,10 @@ rem   The class path to be appended to the boot class path.
 rem
 rem YOFL_LOGGING_FILE
 rem   The desired output stream for the launcher logger. The value may be
-rem   'stderr' or 'stdout', which applies as the default, or a file name.
+rem   'stdout' or 'stderr', which applies as the default, or a file name.
 rem
 rem YOFL_LOGGING_LEVEL
-rem   The logging level for the container launcher.
+rem   The logging level for the launcher logger.
 rem
 rem ---------------------------------------------------------------------------
 
