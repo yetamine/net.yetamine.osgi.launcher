@@ -56,23 +56,23 @@ esac
 
 # For Cygwin, switch paths to Unix format for the common processing
 if $cygwin; then
-  [[ -n "$YOFL_BOOTPATH" ]] && YOFL_BOOTPATH=`cygpath --path --unix "$YOFL_BOOTPATH"`
+  [ -n "$YOFL_BOOTPATH" ] && YOFL_BOOTPATH=`cygpath --path --unix "$YOFL_BOOTPATH"`
 fi
 
 # Set YOFL_HOME
 YOFL_HOME=`cd "$RUNDIR" >/dev/null; pwd`
 # Only set JAVA if not already set (then assuming 'java' is on PATH)
-[[ -z "$JAVA" ]] && JAVA='java'
+[ -z "$JAVA" ] && JAVA='java'
 # The boot class path, which must be given explicitly when using -classpath
 MAIN='net.yetamine.osgi.launcher.Main'
 # Ensure that any user-defined CLASSPATH variables are not used and fill it
 # with the argument to be used for --classpath anyway
 CLASSPATH="${YOFL_HOME}/yofl.jar"
 # Extend the class path with caller-defined entries
-[[ -n "$YOFL_BOOTPATH" ]] && CLASSPATH="${CLASSPATH}:${YOFL_BOOTPATH}"
+[ -n "$YOFL_BOOTPATH" ] && CLASSPATH="${CLASSPATH}:${YOFL_BOOTPATH}"
 
 # Add modules from the boot/ directory
-if [[ -n "$YOFL_AUTOPATH" ]]; then
+if [ -n "$YOFL_AUTOPATH" ]; then
     for file in "${YOFL_AUTOPATH}"/*.jar; do
       CLASSPATH="${CLASSPATH}:${file}"
     done
