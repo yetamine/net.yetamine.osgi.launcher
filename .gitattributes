@@ -1,4 +1,4 @@
-*.sh                                    eol=lf
+/src/main/assembly/distribution/**          eol=lf
 
-# Project specific settings
-/src/main/assembly/distribution/yofl    eol=lf
+*.cmd                                       eol=crlf
+*.sh                                        eol=lf
