@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import net.yetamine.osgi.launcher.deploying.DeploymentUmbrella;
 import net.yetamine.osgi.launcher.logging.Logger;
@@ -126,15 +127,21 @@ final class InstanceSupport extends LoggerSupporter {
     }
 
     /**
-     * Creates a filter based on the given locations.
+     * Creates a filter based on the given expressions.
      *
-     * @param locations
-     *            the locations to use. It must not be {@code null}.
+     * @param expressions
+     *            the expressions to use. It must be a collection containing
+     *            zero or more restricted glob expressions that are used to
+     *            match the bundle locations.
      *
      * @return the filter
      */
-    public static Predicate<Bundle> uninstallFilter(Collection<String> locations) {
-        return bundle -> locations.stream().anyMatch(bundle.getLocation()::startsWith);
+    public static Predicate<Bundle> uninstallFilter(Collection<String> expressions) {
+        final Collection<BundlePathMatcher> matchers = expressions.stream() ///
+                .map(BundlePathMatcher::new)                                ///
+                .collect(Collectors.toList());
+
+        return bundle -> matchers.stream().anyMatch(matcher -> matcher.test(bundle.getLocation()));
     }
 
     /**

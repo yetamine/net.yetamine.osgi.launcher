@@ -85,8 +85,10 @@ deploy [OPTION...] INSTANCE
     --system-property, -S NAME VALUE
         Sets system property NAME to VALUE.
 
-    --uninstall-bundles, -U LOCATION
-        Uninstalls all bundles with location starting with LOCATION.
+    --uninstall-bundles, -U EXPRESSION
+        Uninstalls all bundles with the location matching to EXPRESSION which
+        is a restricted glob expression (unlike the full glob expression, the
+        restricted variant allows only '?', '*' and '**' wildcards).
 
     --update-configuration, -u DIR
         Adds DIR to the list of directories to supply INSTANCE/conf contents

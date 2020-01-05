@@ -181,7 +181,7 @@ enum ConfigurationOption implements ArgumentsGrouping<Configuration> {
     UNINSTALL_BUNDLES("--uninstall-bundles", "-U") {
         @Override
         public void handle(Arguments args, Configuration context) {
-            context.uninstallBundles().add(args.requireString("LOCATION"));
+            context.uninstallBundles().add(args.requireString("EXPRESSION"));
             args.next();
         }
     },

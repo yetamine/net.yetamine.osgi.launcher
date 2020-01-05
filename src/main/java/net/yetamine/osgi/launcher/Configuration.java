@@ -243,7 +243,7 @@ final class Configuration {
     }
 
     /**
-     * @return the list of locations to remove
+     * @return the list of expression for the locations to remove
      */
     public List<String> uninstallBundles() {
         return uninstallBundles;
